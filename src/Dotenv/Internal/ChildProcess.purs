@@ -3,7 +3,6 @@
 module Dotenv.Internal.ChildProcess
   ( CHILD_PROCESS
   , ChildProcessF(..)
-  , _childProcess
   , handleChildProcess
   , spawn
   ) where
@@ -25,15 +24,11 @@ import Node.Errors.SystemError as OS
 import Node.EventEmitter (on_)
 import Node.Stream (dataHStr, setEncoding)
 import Run (Run, lift)
-import Type.Proxy (Proxy(..))
 
 -- | A data type representing the supported operations
 data ChildProcessF a = Spawn String (Array String) (String -> a)
 
 derive instance functorChildProcessF :: Functor ChildProcessF
-
--- | The effect label used for a child process
-_childProcess = Proxy :: Proxy "childProcess"
 
 -- | The effect type used for a child process
 type CHILD_PROCESS r = (childProcess :: ChildProcessF | r)
@@ -52,7 +47,7 @@ handleChildProcess (Spawn cmd args callback) = do
 
 -- | Constructs the value used to spawn a child process.
 spawn :: forall r. String -> Array String -> Run (CHILD_PROCESS r) String
-spawn cmd args = lift _childProcess (Spawn cmd args identity)
+spawn cmd args = lift @"childProcess" (Spawn cmd args identity)
 
 -- Following adapted from https://github.com/justinwoo/purescript-sunde/blob/master/src/Sunde.purs
 

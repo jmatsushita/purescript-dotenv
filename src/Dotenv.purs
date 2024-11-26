@@ -10,8 +10,8 @@ import Data.Maybe (Maybe)
 import Data.String.Common (trim)
 import Data.Tuple (Tuple)
 import Dotenv.Internal.Apply (apply)
-import Dotenv.Internal.ChildProcess (_childProcess, handleChildProcess)
-import Dotenv.Internal.Environment (_environment, handleEnvironment)
+import Dotenv.Internal.ChildProcess (handleChildProcess)
+import Dotenv.Internal.Environment (handleEnvironment)
 import Dotenv.Internal.Parser (parser)
 import Dotenv.Internal.Types (Setting) as IT
 import Dotenv.Internal.Types (UnresolvedValue)
@@ -58,6 +58,6 @@ processSettings :: Array (IT.Setting UnresolvedValue) -> Aff Unit
 processSettings = apply
   >>> interpret
     ( case_
-        # on _childProcess handleChildProcess
-        # on _environment handleEnvironment
+        # on @"childProcess" handleChildProcess
+        # on @"environment" handleEnvironment
     )
